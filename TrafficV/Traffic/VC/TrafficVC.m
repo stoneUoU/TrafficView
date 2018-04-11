@@ -6,16 +6,17 @@
 //  Copyright © 2018年 com.youlu. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "TrafficVC.h"
 
-@interface ViewController ()
+@interface TrafficVC ()
 
 @end
 
-@implementation ViewController
+@implementation TrafficVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor cyanColor];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
