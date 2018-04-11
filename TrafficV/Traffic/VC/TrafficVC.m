@@ -12,7 +12,8 @@
 @interface TrafficVC ()<GCDAsyncSocketDelegate,AppDel>{
     // 这个socket用来做发送使用 当然也可以接收
     GCDAsyncSocket *sendTcpSocket;
-}//<SLWebSocketDelegate>
+}
+//<SLWebSocketDelegate>
 
 @end
 @implementation TrafficVC
@@ -39,6 +40,15 @@
     //[self performSelector:@selector(decideNet) withObject:nil/*可传任意类型参数*/ afterDelay:3];
     [self setTcpSocket];
     [AppDelegate shareIns].delegate = self;
+    //程序进入后台闭包:
+    [AppDelegate shareIns].dictB = ^(NSDictionary *dict, BOOL b){
+        STLog(@"%@",[dict objectForKey:@"postN"]);
+        [self.task cancel];
+    };
+//    AppDelegate *appDel=[[AppDelegate alloc]init ];
+//    appDel.dictB = ^(NSDictionary *dict, BOOL b){
+//        STLog(@"%@",[dict objectForKey:@"postN"]);
+//    };
 }
 -(void) setNotice{
     //监听是否有网
@@ -106,9 +116,10 @@
     config.allowsCellularAccess = YES;
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     //创建网络任务
-    NSURLSessionDataTask *task = [session dataTaskWithURL:url];
+    self.task = [session dataTaskWithURL:url];
     //5 发起网络任务
-    [task resume];
+    [self.task resume];
+    //[task cancel];
 }
 //已经接受到响应头
 -(void)URLSession:(NSURLSession *)session dataTask:(nonnull NSURLSessionDataTask *)dataTask
@@ -130,39 +141,40 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 
 #pragma mark - TrafficVDel
 - (void)toUp {
-    NSString *str = @"to Up";
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *str = @"发送前进指令";
+    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
     // 发送消息 这里不需要知道对象的ip地址和端口
     [sendTcpSocket writeData:data withTimeout:60 tag:100];
 }
 - (void)toDown {
-    NSString *str = @"to Down";
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *str = @"发送后退指令";
+    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
     // 发送消息 这里不需要知道对象的ip地址和端口
     [sendTcpSocket writeData:data withTimeout:60 tag:100];
 }
 
 - (void)toLeft {
-    NSString *str = @"to left";
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *str = @"发送左转指令";
+    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
     // 发送消息 这里不需要知道对象的ip地址和端口
     [sendTcpSocket writeData:data withTimeout:60 tag:100];
 }
 
 - (void)toRight {
-    NSString *str = @"to right";
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *str = @"发送右转指令";
+    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
     // 发送消息 这里不需要知道对象的ip地址和端口
     [sendTcpSocket writeData:data withTimeout:60 tag:100];  
 }
 
 #pragma mark - MissNetVDel
 - (void)toGo {
-    //[self decideNet];
+    [self.task cancel];
+    [self decideNet];
 }
 #pragma mark - AppDel
 - (void)toWakeUp:(NSDictionary *)dict {
-    STLog(@"noti = %@",[dict objectForKey:@"num"]);
+    STLog(@"%@",[dict objectForKey:@"postN"]);
     [self decideNet];
 }
 //方法:网络通知:
@@ -212,17 +224,13 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     //NSString *ip = [sock connectedHost];
     //uint16_t port = [sock connectedPort];
-
-    STLog(@"%@",data);
-
-    NSString *s = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
+    NSString *s = [[NSString alloc] initWithData:data encoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
+    //CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)   ============  防止乱码
     //STLog(@"接收到服务器返回的数据 tcp [%@:%d] %@", ip, port, s);
     [HudTips showToast: s showType:Pos animationType:StToastAnimationTypeScale];
     // 每次读取完数据，都要调用下面的方式
     [sock readDataWithTimeout:-1 tag:0];
 }
-
 ///--------------------------------------
 #pragma mark - SLWebSocketDelegate
 ///--------------------------------------

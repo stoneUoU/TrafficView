@@ -32,5 +32,7 @@
 @property (strong, nonatomic) UICKeyChainStore *keychainStore;
 //是否有网络
 @property(nonatomic, copy) NSString *netUseVals;
+
+@property(nonatomic, copy) NSURLSessionDataTask *task;
 @end
 

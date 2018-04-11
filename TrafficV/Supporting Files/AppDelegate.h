@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 // iOS实现Ping命令
 #import "STPingTester.h"
-//typedef void(^DictB)(NSDictionary *, BOOL);
+
+typedef void(^DictB)(NSDictionary *, BOOL);
 
 @protocol AppDel <NSObject>
 - (void)toWakeUp:(NSDictionary *)dict;
@@ -22,6 +23,8 @@
 @property(nonatomic, strong) STPingTester* pingTester;
 
 @property (weak, nonatomic) id<AppDel> delegate;
+
+@property (nonatomic, strong) DictB dictB;
 
 +(instancetype) shareIns;
 

@@ -134,6 +134,9 @@ static AppDelegate *_shareIns = nil;
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    //如何解决点击home键进入后台，程序进程被杀死后，画面卡住不动的bug
+    //程序进入后台，发送通知给TrafficVC，将网络任务给取消
+    _dictB(@{@"postN":@"Yes,进入后台"}, YES);
 }
 
 
@@ -141,12 +144,11 @@ static AppDelegate *_shareIns = nil;
     // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
     //STLog(@"applicationWillEnterForeground");
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"enterForeTai" object:@{@"enterForeTai":@YES}];
-    //_dictB(@{@"name":@"oooooo"}, YES);
     //[AppDelegate getDictB](@{@"name":@"oooooo"}, YES);
-
+    //程序进入后台，发送通知给TrafficVC，重新发送网络请求，这样便可以解决此bug,hahahhaha
     if ([_delegate respondsToSelector:@selector(toWakeUp:)]) {
-        // 调用代理方法并传入红色
-        [_delegate toWakeUp:@{@"num":@109}];
+        // 调用代理方法
+        [_delegate toWakeUp:@{@"postN":@"Yes,进入前台"}];
     }
 }
 
