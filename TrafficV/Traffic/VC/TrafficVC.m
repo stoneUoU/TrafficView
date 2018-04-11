@@ -153,7 +153,7 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
     NSString *str = @"to right";
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
     // 发送消息 这里不需要知道对象的ip地址和端口
-    [sendTcpSocket writeData:data withTimeout:60 tag:100];
+    [sendTcpSocket writeData:data withTimeout:60 tag:100];  
 }
 
 #pragma mark - MissNetVDel
