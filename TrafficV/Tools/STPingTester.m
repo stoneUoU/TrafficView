@@ -1,24 +1,24 @@
 //
-//  WHPingTester.m
+//  STPingTester.m
 //  BigVPN
 //
 //  Created by wanghe on 2017/5/11.
 //  Copyright © 2017年 wanghe. All rights reserved.
 //
 //  iOS实现Ping命令
-#import "WHPingTester.h"
+#import "STPingTester.h"
 
-@interface WHPingTester()<SimplePingDelegate>
+@interface STPingTester()<SimplePingDelegate>
 {
     NSTimer* _timer;
     NSDate* _beginDate;
 }
 @property(nonatomic, strong) SimplePing* simplePing;
 
-@property(nonatomic, strong) NSMutableArray<WHPingItem*>* pingItems;
+@property(nonatomic, strong) NSMutableArray<STPingItem*>* pingItems;
 @end
 
-@implementation WHPingTester
+@implementation STPingTester
 
 - (instancetype) initWithHostName:(NSString*)hostName
 {
@@ -62,7 +62,7 @@
 #pragma mark Ping Delegate
 - (void)simplePing:(SimplePing *)pinger didStartWithAddress:(NSData *)address
 {
-    [self actionTimer];
+    [self sendPingData];//[self actionTimer];
 }
 
 - (void)simplePing:(SimplePing *)pinger didFailWithError:(NSError *)error
@@ -73,7 +73,7 @@
 
 - (void)simplePing:(SimplePing *)pinger didSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber
 {
-    WHPingItem* item = [WHPingItem new];
+    STPingItem* item = [STPingItem new];
     item.sequence = sequenceNumber;
     [self.pingItems addObject:item];
     
@@ -102,7 +102,7 @@
 - (void)simplePing:(SimplePing *)pinger didReceivePingResponsePacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber
 {
     float delayTime = [[NSDate date] timeIntervalSinceDate:_beginDate] * 1000;
-    [self.pingItems enumerateObjectsUsingBlock:^(WHPingItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.pingItems enumerateObjectsUsingBlock:^(STPingItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if(obj.sequence == sequenceNumber)
         {
             [self.pingItems removeObject:obj];
@@ -120,6 +120,6 @@
 
 @end
 
-@implementation WHPingItem
+@implementation STPingItem
 
 @end

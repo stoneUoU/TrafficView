@@ -1,0 +1,9 @@
+platform :ios, ’8.0’
+target ‘TrafficV’ do
+use_frameworks!
+pod 'Masonry'
+pod 'SocketRocket'
+pod 'RealReachability'
+pod 'UICKeyChainStore'
+pod 'CocoaAsyncSocket'
+end 

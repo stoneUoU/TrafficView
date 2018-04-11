@@ -1,0 +1,28 @@
+PODS:
+  - CocoaAsyncSocket (7.6.2)
+  - Masonry (1.1.0)
+  - RealReachability (1.1.9):
+    - RealReachability/Connection (= 1.1.9)
+    - RealReachability/Ping (= 1.1.9)
+  - RealReachability/Connection (1.1.9)
+  - RealReachability/Ping (1.1.9)
+  - SocketRocket (0.5.1)
+  - UICKeyChainStore (2.1.1)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket
+  - Masonry
+  - RealReachability
+  - SocketRocket
+  - UICKeyChainStore
+
+SPEC CHECKSUMS:
+  CocoaAsyncSocket: 3541e024f48c54b251638ef72d51dd42808de932
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  RealReachability: a8c483900986a0f3305733961effbfbb00637a02
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  UICKeyChainStore: 239558492fa260531a0774cfc611ea83a6eaff3a
+
+PODFILE CHECKSUM: 26b8b22733bf362a3714966bfecc1ef215b4c466
+
+COCOAPODS: 1.4.0

@@ -1,5 +1,5 @@
 //
-//  WHPingTester.h
+//  STPingTester.h
 //  BigVPN
 //
 //  Created by wanghe on 2017/5/11.
@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "SimplePing.h"
 
-@protocol WHPingDelegate <NSObject>
+@protocol STPingDelegate <NSObject>
 @optional
 - (void) didPingSucccessWithTime:(float)time withError:(NSError*) error;
 @end
 
 
-@interface WHPingTester : NSObject<SimplePingDelegate>
-@property (nonatomic, weak, readwrite) id<WHPingDelegate> delegate;
+@interface STPingTester : NSObject<SimplePingDelegate>
+@property (nonatomic, weak, readwrite) id<STPingDelegate> delegate;
 - (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithHostName:(NSString*)hostName NS_DESIGNATED_INITIALIZER;
 
@@ -24,14 +24,14 @@
 - (void) stopPing;
 @end
 
-typedef NS_ENUM(NSUInteger, WHPingStatus){
-    WHPingStatusSending = 0 << 0,
-    WHPingStatusTimeout = 1 << 1,
-    WHPingStatusSended = 2 << 2,
+typedef NS_ENUM(NSUInteger, STPingStatus){
+    STPingStatusSending = 0 << 0,
+    STPingStatusTimeout = 1 << 1,
+    STPingStatusSended = 2 << 2,
 };
 
-@interface WHPingItem : NSObject
-//@property(nonatomic, assign) WHPingStatus status;
+@interface STPingItem : NSObject
+//@property(nonatomic, assign) STPingStatus status;
 @property(nonatomic, assign) uint16_t sequence;
 
 @end

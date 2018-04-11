@@ -9,22 +9,6 @@
 #import "HudTips.h"
 
 @implementation HudTips
-+ (void)showHUD:(UIViewController *)ctrl
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // 更新界面
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo: ctrl.view animated:true];
-        hud.mode = MBProgressHUDModeIndeterminate;
-    });
-}
-
-+ (void)hideHUD:(UIViewController *)ctrl
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // 更新界面
-        [MBProgressHUD hideHUDForView: ctrl.view animated:YES];
-    });
-}
 
 + (void)showToast:(NSString *)text showType:(StToastShowType)type animationType:(StToastAnimationType)animationType{
     dispatch_async(dispatch_get_main_queue(), ^{

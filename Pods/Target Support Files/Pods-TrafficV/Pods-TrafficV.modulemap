@@ -1,0 +1,6 @@
+framework module Pods_TrafficV {
+  umbrella header "Pods-TrafficV-umbrella.h"
+
+  export *
+  module * { export * }
+}
