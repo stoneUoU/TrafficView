@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08AEC7517820D7FF4D895249 /* Pods_TrafficV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F525FBAEDC85D840A3F0892B /* Pods_TrafficV.framework */; };
+		5289F963208B0F0000BC9C4B /* STJoyStickV.m in Sources */ = {isa = PBXBuildFile; fileRef = 5289F962208B0F0000BC9C4B /* STJoyStickV.m */; };
 		528C20A1207AF3BC007276D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C20A0207AF3BC007276D6 /* AppDelegate.m */; };
 		528C20A4207AF3BC007276D6 /* TrafficVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C20A3207AF3BC007276D6 /* TrafficVC.m */; };
 		528C20A9207AF3BE007276D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 528C20A8207AF3BE007276D6 /* Assets.xcassets */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5289F961208B0F0000BC9C4B /* STJoyStickV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STJoyStickV.h; sourceTree = "<group>"; };
+		5289F962208B0F0000BC9C4B /* STJoyStickV.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STJoyStickV.m; sourceTree = "<group>"; };
 		528C209C207AF3BC007276D6 /* TrafficV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrafficV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		528C209F207AF3BC007276D6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		528C20A0207AF3BC007276D6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -133,6 +136,8 @@
 				52E68B29207AF79800B8B716 /* TrafficV.m */,
 				52E68B39207AFEF900B8B716 /* MissNetV.h */,
 				52E68B3A207AFEF900B8B716 /* MissNetV.m */,
+				5289F961208B0F0000BC9C4B /* STJoyStickV.h */,
+				5289F962208B0F0000BC9C4B /* STJoyStickV.m */,
 			);
 			path = V;
 			sourceTree = "<group>";
@@ -280,6 +285,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-TrafficV/Pods-TrafficV-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
@@ -288,6 +294,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
@@ -311,6 +318,7 @@
 				528C20A4207AF3BC007276D6 /* TrafficVC.m in Sources */,
 				528C20AF207AF3BE007276D6 /* main.m in Sources */,
 				52E68B3E207B41F900B8B716 /* SimplePing.m in Sources */,
+				5289F963208B0F0000BC9C4B /* STJoyStickV.m in Sources */,
 				52E68B33207AFB8C00B8B716 /* StToastAnimation.m in Sources */,
 				52E68B2A207AF79800B8B716 /* TrafficV.m in Sources */,
 				52E68B38207AFBC800B8B716 /* HudTips.m in Sources */,

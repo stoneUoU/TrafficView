@@ -16,5 +16,6 @@
 #import "RealReachability.h"
 //本地存储  KeyChainStore
 #import <UICKeyChainStore/UICKeyChainStore.h>
+#import <AFNetworking/AFNetworking.h>
 
 

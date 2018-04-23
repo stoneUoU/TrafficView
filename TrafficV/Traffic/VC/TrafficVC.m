@@ -10,11 +10,9 @@
 #import "HudTips.h"
 #import "GCDAsyncSocket.h"
 @interface TrafficVC ()<GCDAsyncSocketDelegate,AppDel>{
-    // 这个socket用来做发送使用 当然也可以接收
+    // 这个socket用来做发送使用 当然也可以接收  //<SLWebSocketDelegate>
     GCDAsyncSocket *sendTcpSocket;
 }
-//<SLWebSocketDelegate>
-
 @end
 @implementation TrafficVC
 - (id)init
@@ -32,9 +30,9 @@
     _data = [[NSMutableData alloc] init];
     return [super init];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setNotice];
     [self setUpUI];
     //发送网络请求:
     //[self performSelector:@selector(decideNet) withObject:nil/*可传任意类型参数*/ afterDelay:3];
@@ -49,19 +47,8 @@
 //    appDel.dictB = ^(NSDictionary *dict, BOOL b){
 //        STLog(@"%@",[dict objectForKey:@"postN"]);
 //    };
-}
--(void) setNotice{
-    //监听是否有网
-    _netUseVals = [UICKeyChainStore keyChainStore][@"ifnetUse"];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(setNet:)
-                                                 name:@"netChange"
-                                               object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRequest:) name:@"enterForeTai" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setRes:) name:@"orPingNet" object:nil];
-//    [AppDelegate getDictB] = ^(NSDictionary *dict, BOOL b){
-//        STLog(@"%@",[dict objectForKey:@"name"]);
-//    };
+    [self decideNet];
+
 }
 -(void) setUpUI{
     [self.view addSubview:_trafficV];
@@ -92,18 +79,27 @@
 //    [_socketNet startConnect];
 //}
 
--(void)decideNet{
-    if ([_netUseVals isEqualToString: @"Useable"]){
-        STLog(@"===============%@",[UICKeyChainStore keyChainStore][@"orPingNet"]);
-        if ([ [UICKeyChainStore keyChainStore][@"orPingNet"] isEqualToString: @"YES"]){
-            [_missNetV removeFromSuperview];
-            [self startR];
-        }else{
-            [self setMissNetV];
-        }
-    }else{
+-(void)pingNet{
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    //注意：responseObject:请求成功返回的响应结果（AFN内部已经把响应体转换为OC对象，通常是字典或数组）
+    /**分别设置请求以及相应的序列化器*/
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"text/html", @"text/javascript",@"image/jpeg", nil];
+    //self.LogisticCode = "538681744406"  "887102266424600383"  self.ShipperCode = "ZTO"  "YTO"
+    [manager GET:@"http://192.168.1.1:8080/?action=snapshot" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull res) {
+        STLog(@"进了=======成功");
+        [self.missNetV removeFromSuperview];
+        [self startR];
+    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+        STLog(@"进了=======失败");
+        //[HudTips showToast: @"未连接到局域网wifi" showType:Pos animationType:StToastAnimationTypeScale];
         [self setMissNetV];
-    }
+    }];
+}
+
+-(void)decideNet{
+    [self pingNet];
 }
 
 //MARK: NSURLSession代码段
@@ -137,34 +133,65 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
-
+- (void)sendDs:(NSString *)str{
+    [sendTcpSocket writeData:[str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)] withTimeout:60 tag:100];
+}
 
 #pragma mark - TrafficVDel
 - (void)toUp {
-    NSString *str = @"发送前进指令";
-    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
-    // 发送消息 这里不需要知道对象的ip地址和端口
-    [sendTcpSocket writeData:data withTimeout:60 tag:100];
+    [self sendDs:@"发送前进指令"];
 }
 - (void)toDown {
-    NSString *str = @"发送后退指令";
-    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
-    // 发送消息 这里不需要知道对象的ip地址和端口
-    [sendTcpSocket writeData:data withTimeout:60 tag:100];
+    [self sendDs:@"发送后退指令"];
 }
 
 - (void)toLeft {
-    NSString *str = @"发送左转指令";
-    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
-    // 发送消息 这里不需要知道对象的ip地址和端口
-    [sendTcpSocket writeData:data withTimeout:60 tag:100];
+    [self sendDs:@"发送左转指令"];
 }
 
 - (void)toRight {
-    NSString *str = @"发送右转指令";
-    NSData *data = [str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
-    // 发送消息 这里不需要知道对象的ip地址和端口
-    [sendTcpSocket writeData:data withTimeout:60 tag:100];  
+    [self sendDs:@"发送右转指令"];
+}
+
+-(void)toControl:(NSInteger)direction{
+    switch (direction) {
+        case 0:{
+            [self sendDs:@"向上"];
+            break;
+        }
+        case 1:{
+            [self sendDs:@"向右上"];
+            break;
+        }
+        case 2:{
+            [self sendDs:@"向右"];
+            break;
+        }
+        case 3:{
+            [self sendDs:@"向右下"];
+            break;
+        }
+        case 4:{
+            [self sendDs:@"向下"];
+            break;
+        }
+        case 5:{
+            [self sendDs:@"向左下"];
+            break;
+        }
+        case 6:{
+            [self sendDs:@"向左"];
+            break;
+        }
+        case 7:{
+            [self sendDs:@"向左上"];
+            break;
+        }
+        default:{
+            [self sendDs:@"回到中心"];
+            break;
+        }
+    }
 }
 
 #pragma mark - MissNetVDel
@@ -175,21 +202,6 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 #pragma mark - AppDel
 - (void)toWakeUp:(NSDictionary *)dict {
     STLog(@"%@",[dict objectForKey:@"postN"]);
-    [self decideNet];
-}
-//方法:网络通知:
--(void)setNet:(NSNotification *)notification{
-    NSDictionary *dict = notification.userInfo;
-    STLog(@"dict = %@",dict);
-    _netUseVals =  dict[@"ifnetUse"];
-}
-//方法:监听到通知之后调用的方法(进入前台)
-//- (void)setRequest:(NSNotification *)noti {
-//    STLog(@"noti = %@",[noti.object objectForKey:@"enterForeTai"]);
-//    [self decideNet];
-//}
-//方法:监听到通知之后调用的方法（ping通）zywifibot网络
-- (void)setRes:(NSNotification *)noti {
     [self decideNet];
 }
 //TCPSocket
@@ -205,13 +217,13 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 }
 #pragma mark - 代理方法表示连接成功/失败 回调函数(GCDAsyncSocketDelegate)
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
-    STLog(@"连接成功");
+    [HudTips showToast: @"TCP连接成功" showType:Pos animationType:StToastAnimationTypeScale];
     // 等待数据来啊
     [sock readDataWithTimeout:-1 tag:200];
 }
 // 如果对象关闭了 这里也会调用
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
-    STLog(@"连接失败 %@", err);
+    //STLog(@"连接失败 %@", err);
     // 断线重连
     NSString *host = @"10.10.53.4";
     uint16_t port = 60000;
@@ -253,8 +265,6 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
     [sendTcpSocket disconnect];
     sendTcpSocket = nil;
     // 移除监听者
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"enterForeTai" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"netChange" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"orPingNet" object:nil];
 }
 @end

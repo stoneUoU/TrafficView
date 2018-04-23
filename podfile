@@ -6,4 +6,5 @@ pod 'SocketRocket'
 pod 'RealReachability'
 pod 'UICKeyChainStore'
 pod 'CocoaAsyncSocket'
+pod 'AFNetworking'
 end 

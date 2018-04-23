@@ -1,4 +1,19 @@
 PODS:
+  - AFNetworking (3.2.0):
+    - AFNetworking/NSURLSession (= 3.2.0)
+    - AFNetworking/Reachability (= 3.2.0)
+    - AFNetworking/Security (= 3.2.0)
+    - AFNetworking/Serialization (= 3.2.0)
+    - AFNetworking/UIKit (= 3.2.0)
+  - AFNetworking/NSURLSession (3.2.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.0)
+  - AFNetworking/Security (3.2.0)
+  - AFNetworking/Serialization (3.2.0)
+  - AFNetworking/UIKit (3.2.0):
+    - AFNetworking/NSURLSession
   - CocoaAsyncSocket (7.6.2)
   - Masonry (1.1.0)
   - RealReachability (1.1.9):
@@ -10,6 +25,7 @@ PODS:
   - UICKeyChainStore (2.1.1)
 
 DEPENDENCIES:
+  - AFNetworking
   - CocoaAsyncSocket
   - Masonry
   - RealReachability
@@ -17,12 +33,13 @@ DEPENDENCIES:
   - UICKeyChainStore
 
 SPEC CHECKSUMS:
+  AFNetworking: 8ac6017b94ea105479f7776e5288e48ae9c59bb4
   CocoaAsyncSocket: 3541e024f48c54b251638ef72d51dd42808de932
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   RealReachability: a8c483900986a0f3305733961effbfbb00637a02
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   UICKeyChainStore: 239558492fa260531a0774cfc611ea83a6eaff3a
 
-PODFILE CHECKSUM: 26b8b22733bf362a3714966bfecc1ef215b4c466
+PODFILE CHECKSUM: c18198d426df68331b8ec2ec4e9d58fd9cb19e98
 
 COCOAPODS: 1.4.0

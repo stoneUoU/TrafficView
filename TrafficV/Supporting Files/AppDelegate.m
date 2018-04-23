@@ -40,90 +40,9 @@ static AppDelegate *_shareIns = nil;
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.window makeKeyAndVisible];
     self.window.rootViewController =  [[TrafficVC alloc] init];
-    [self setPing];
-    //网络变化
-    [GLobalRealReachability startNotifier];
-    [self setNetNotice];
-    [NSThread sleepForTimeInterval:2.0];
+    [NSThread sleepForTimeInterval:1.0];
     return YES;
 }
-
-//是否能ping通:
--(void) setPing{
-    self.pingTester = [[STPingTester alloc] initWithHostName:@"http://www.baidu.com"];//@"http://192.168.1.1:8080/?action=snapshot"];//
-    self.pingTester.delegate = self;
-    [self.pingTester startPing];
-}
-
--(void) setNetNotice{
-    UICKeyChainStore *keychainStore = [UICKeyChainStore keyChainStore];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(networkChanged:)
-                                                 name:kRealReachabilityChangedNotification
-                                               object:nil];
-    ReachabilityStatus status = [GLobalRealReachability currentReachabilityStatus];
-    if (status == RealStatusNotReachable)
-    {
-        STLog(@"1111");
-        keychainStore[@"ifnetUse"] = @"unUseable";
-    }
-    if (status == RealStatusViaWiFi)
-    {
-        STLog(@"2222");
-        keychainStore[@"ifnetUse"] = @"Useable";
-    }
-
-    if (status == RealStatusViaWWAN)
-    {
-        STLog(@"3333");
-        keychainStore[@"ifnetUse"] = @"Useable";
-    }
-}
-
-- (void)networkChanged:(NSNotification *)notification
-{
-    UICKeyChainStore *keychainStore = [UICKeyChainStore keyChainStore];
-    RealReachability *reachability = (RealReachability *)notification.object;
-    ReachabilityStatus status = [reachability currentReachabilityStatus];
-
-
-    if (status == RealStatusNotReachable)
-    {
-        keychainStore[@"ifnetUse"] = @"unUseable";
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"netChange" object:self userInfo:@{@"ifnetUse":@"unUseable"}];
-    }
-
-    if (status == RealStatusViaWiFi)
-    {
-        keychainStore[@"ifnetUse"] = @"Useable";
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"netChange" object:self userInfo:@{@"ifnetUse":@"Useable"}];
-    }
-
-    if (status == RealStatusViaWWAN)
-    {
-        keychainStore[@"ifnetUse"] = @"Useable";
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"netChange" object:self userInfo:@{@"ifnetUse":@"Useable"}];
-    }
-
-    WWANAccessType accessType = [GLobalRealReachability currentWWANtype];
-
-    if (status == RealStatusViaWWAN)
-    {
-        if (accessType == WWANType2G)
-        {
-            STLog(@"RealReachabilityStatus2G");
-        }
-        else if (accessType == WWANType3G)
-        {
-            STLog(@"RealReachabilityStatus3G");
-        }
-        else if (accessType == WWANType4G)
-        {
-            STLog(@"RealReachabilityStatus4G");
-        }
-    }
-}
-
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -161,21 +80,5 @@ static AppDelegate *_shareIns = nil;
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
-#pragma mark - STPingDelegate
-- (void) didPingSucccessWithTime:(float)time withError:(NSError *)error
-{
-    if(!error)
-    {
-        STLog(@"拼得通");
-        [UICKeyChainStore keyChainStore][@"orPingNet"] = @"YES";
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"orPingNet" object:@{@"orPingNet":@YES}];
-    }else{
-        STLog(@"拼不通");
-        [UICKeyChainStore keyChainStore][@"orPingNet"] = @"NO";
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"orPingNet" object:@{@"orPingNet":@NO}];
-    }
-}
-
 
 @end
