@@ -33,5 +33,9 @@
 
 @property(nonatomic, copy) NSURLSessionDataTask *task;
 
+@property(nonatomic, assign) float lmiles;   //左轮里程
+
+@property(nonatomic, assign) float rmiles;   //右轮里程
+
 @end
 

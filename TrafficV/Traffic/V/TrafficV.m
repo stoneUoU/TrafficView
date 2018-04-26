@@ -7,6 +7,7 @@
 //
 
 #import "TrafficV.h"
+#import "UIButton+ST_FixMultiClick.h"
 @implementation TrafficV
 - (void)drawRect:(CGRect)rect {
     [self setUpUI];
@@ -15,6 +16,48 @@
     _monitorIV = [[UIImageView alloc] init ];
     _monitorIV.backgroundColor = [UIColor whiteColor];
     [self addSubview:_monitorIV];
+
+    _LDis = [[UILabel alloc] init ];
+    _LDis.font = [UIFont systemFontOfSize:16];
+    _LDis.backgroundColor = [UIColor redColor];
+    _LDis.textColor = [UIColor whiteColor];
+    _LDis.textAlignment = NSTextAlignmentLeft;
+    _LDis.text = @"左轮里程：";
+    [self addSubview:_LDis];
+
+    _LVals = [[UILabel alloc] init ];
+    _LVals.font = [UIFont systemFontOfSize:16];
+    _LVals.backgroundColor = [UIColor redColor];
+    _LVals.textColor = [UIColor whiteColor];
+    _LVals.textAlignment = NSTextAlignmentLeft;
+    _LVals.text = @"0.000cm";   //左轮里程值
+    [self addSubview:_LVals];
+
+    _RDis = [[UILabel alloc] init ];
+    _RDis.font = [UIFont systemFontOfSize:16];
+    _RDis.backgroundColor = [UIColor redColor];
+    _RDis.textColor = [UIColor whiteColor];
+    _RDis.textAlignment = NSTextAlignmentLeft;
+    _RDis.text = @"右轮里程：";
+    [self addSubview:_RDis];
+
+    _RVals = [[UILabel alloc] init ];
+    _RVals.font = [UIFont systemFontOfSize:16];
+    _RVals.backgroundColor = [UIColor redColor];
+    _RVals.textColor = [UIColor whiteColor];
+    _RVals.textAlignment = NSTextAlignmentLeft;
+    _RVals.text = @"0.000cm";   //右轮里程值
+    [self addSubview:_RVals];
+
+    _resetBtn =  [[UIButton alloc] init];
+    [_resetBtn setTitle:@"复位" forState:UIControlStateNormal];
+    [_resetBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _resetBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+    _resetBtn.backgroundColor = [UIColor blackColor];
+    _resetBtn.st_acceptEventInterval = 2;
+    [_resetBtn addTarget:self action:@selector(toReset:)forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_resetBtn];
+
 
 //    _dealV = [[UIView alloc] init ];
 //    [self addSubview:_dealV];
@@ -102,6 +145,32 @@
         make.height.mas_equalTo(ScreenH);
     }];
 
+    [_LDis mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(60*StScaleH);
+        make.left.mas_equalTo(2*spaceM);
+    }];
+
+    [_LVals mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.LDis.mas_top);
+        make.left.mas_equalTo(self.LDis.mas_right).offset(0);
+    }];
+
+    [_RDis mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.LDis.mas_bottom).offset(12*StScaleH);
+        make.left.mas_equalTo(2*spaceM);
+    }];
+
+    [_RVals mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.RDis.mas_top);
+        make.left.mas_equalTo(self.RDis.mas_right).offset(0);
+    }];
+
+    [_resetBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.stJoyStickV.mas_bottom).offset(48*StScaleH);
+        make.centerX.mas_equalTo(self);
+        make.width.mas_equalTo(ScreenW/4);
+    }];
+
 //    [_dealV mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.bottom.equalTo(self).offset(0);
 //        make.right.equalTo(self).offset(0);
@@ -139,6 +208,10 @@
 //        make.width.mas_equalTo(120);
 //        make.height.mas_equalTo(120);
 //    }];
+}
+
+-(void) toReset:(id)sender{
+    [_delegate toReset];
 }
 //点击按钮触发事件
 //-(void) upVTouchBegin:(id)sender{

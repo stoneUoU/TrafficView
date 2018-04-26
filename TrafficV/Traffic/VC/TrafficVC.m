@@ -9,6 +9,7 @@
 #import "TrafficVC.h"
 #import "HudTips.h"
 #import "GCDAsyncSocket.h"
+#import "FormatDs.h"
 @interface TrafficVC ()<GCDAsyncSocketDelegate,AppDel>{
     // 这个socket用来做发送使用 当然也可以接收  //<SLWebSocketDelegate>
     GCDAsyncSocket *sendTcpSocket;
@@ -149,13 +150,17 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
     cmd_switch[4]=RS;//右轮速度: 05
     cmd_switch[5]=RD;//方向: 反
     [sendTcpSocket writeData:[NSData dataWithBytes: cmd_switch  length:6] withTimeout:60 tag:100];
+    //计算里程:
+    [self caluMiles:LS andRS:RS];
 }
 //LDis 左轮走过的里程   RDis 右轮走过的里程   // LS 左轮速度  RS 右轮速度
--(NSDictionary *)caluMiles:(NSString *)LDis andRDis:(NSString *)RDis andLS:(char)LS andRS:(char)RS{
+-(void)caluMiles:(char)LS andRS:(char)RS{
     float scale = 6.326 / 5;
-    //STLog(@"%@",[NSString stringWithUTF8String:0xff ]);
-    //STLog(@"%@",[NSString stringWithFormat:@"%ld",strtoul([[[NSString stringWithCString:LS encoding:NSUTF8StringEncoding] substringWithRange:NSMakeRange(2,2)] UTF8String],0,16)]);
-    return @{@"LDis":@"123",@"RDis":@"123"};
+    _lmiles += [[NSString stringWithFormat:@"%d",LS] intValue]*scale*0.1;
+    _rmiles += [[NSString stringWithFormat:@"%d",RS] intValue]*scale*0.1;
+
+    self.trafficV.LVals.text = [[FormatDs retainPoint:@"0.000" floatV:_lmiles] stringByAppendingString:@"cm"];
+    self.trafficV.RVals.text = [[FormatDs retainPoint:@"0.000" floatV:_rmiles] stringByAppendingString:@"cm"];
 }
 
 #pragma mark - TrafficVDel
@@ -171,12 +176,16 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 //- (void)toRight {
 //    [self sendDs:0x5 andLD:0x0 andRS:0x5 andRD:0x0];
 //}
-
+-(void)toReset{
+    _lmiles = 0;
+    _rmiles = 0;
+    self.trafficV.LVals.text = @"0.000cm";
+    self.trafficV.RVals.text = @"0.000cm";
+}
 -(void)toControl:(NSInteger)direction{
     switch (direction) {
         case 0:{ //向上
-            [self sendDs:0x0F andLD:0x01 andRS:0x0F andRD:0x01];
-            //[self caluMiles:@"0" andRDis:@"0" andLS:0x0F andRS:0x0F];
+            [self sendDs:0x05 andLD:0x01 andRS:0x05 andRD:0x01];
             break;
         }
         case 1:{//向右上
@@ -259,7 +268,7 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
     //NSString *s = [[NSString alloc] initWithData:data encoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
     //CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)   ============  防止乱码
     //STLog(@"接收到服务器返回的数据 tcp [%@:%d] %@", ip, port, s);
-    [HudTips showToast: [@"TCP服务端返回的数据：" stringByAppendingString:[self hexStrFromData:data]] showType:Pos animationType:StToastAnimationTypeScale];
+    [HudTips showToast: [@"TCP：" stringByAppendingString:[self hexStrFromData:data]] showType:Pos animationType:StToastAnimationTypeScale];
     // 每次读取完数据，都要调用下面的方式
     [sock readDataWithTimeout:-1 tag:0];
 }

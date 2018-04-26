@@ -13,6 +13,8 @@
 		528C20A4207AF3BC007276D6 /* TrafficVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C20A3207AF3BC007276D6 /* TrafficVC.m */; };
 		528C20A9207AF3BE007276D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 528C20A8207AF3BE007276D6 /* Assets.xcassets */; };
 		528C20AF207AF3BE007276D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C20AE207AF3BE007276D6 /* main.m */; };
+		5294D9A020916FCA005FE5C8 /* FormatDs.m in Sources */ = {isa = PBXBuildFile; fileRef = 5294D99F20916FCA005FE5C8 /* FormatDs.m */; };
+		5294D9A6209175DE005FE5C8 /* UIButton+ST_FixMultiClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 5294D9A5209175DE005FE5C8 /* UIButton+ST_FixMultiClick.m */; };
 		52E68B2A207AF79800B8B716 /* TrafficV.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B29207AF79800B8B716 /* TrafficV.m */; };
 		52E68B2E207AFA0200B8B716 /* WebSocketNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B2D207AFA0200B8B716 /* WebSocketNetwork.m */; };
 		52E68B33207AFB8C00B8B716 /* StToastAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E68B32207AFB8C00B8B716 /* StToastAnimation.m */; };
@@ -34,6 +36,10 @@
 		528C20A8207AF3BE007276D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		528C20AD207AF3BE007276D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		528C20AE207AF3BE007276D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5294D99E20916FCA005FE5C8 /* FormatDs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FormatDs.h; sourceTree = "<group>"; };
+		5294D99F20916FCA005FE5C8 /* FormatDs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FormatDs.m; sourceTree = "<group>"; };
+		5294D9A4209175DE005FE5C8 /* UIButton+ST_FixMultiClick.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+ST_FixMultiClick.h"; sourceTree = "<group>"; };
+		5294D9A5209175DE005FE5C8 /* UIButton+ST_FixMultiClick.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+ST_FixMultiClick.m"; sourceTree = "<group>"; };
 		52E68B22207AF5D800B8B716 /* CommFiles.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommFiles.pch; sourceTree = "<group>"; };
 		52E68B24207AF61700B8B716 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		52E68B28207AF79800B8B716 /* TrafficV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrafficV.h; sourceTree = "<group>"; };
@@ -166,6 +172,10 @@
 				52E68B3D207B41F900B8B716 /* SimplePing.m */,
 				52E68B40207B420700B8B716 /* STPingTester.h */,
 				52E68B41207B420C00B8B716 /* STPingTester.m */,
+				5294D99E20916FCA005FE5C8 /* FormatDs.h */,
+				5294D99F20916FCA005FE5C8 /* FormatDs.m */,
+				5294D9A4209175DE005FE5C8 /* UIButton+ST_FixMultiClick.h */,
+				5294D9A5209175DE005FE5C8 /* UIButton+ST_FixMultiClick.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -318,11 +328,13 @@
 				528C20A4207AF3BC007276D6 /* TrafficVC.m in Sources */,
 				528C20AF207AF3BE007276D6 /* main.m in Sources */,
 				52E68B3E207B41F900B8B716 /* SimplePing.m in Sources */,
+				5294D9A020916FCA005FE5C8 /* FormatDs.m in Sources */,
 				5289F963208B0F0000BC9C4B /* STJoyStickV.m in Sources */,
 				52E68B33207AFB8C00B8B716 /* StToastAnimation.m in Sources */,
 				52E68B2A207AF79800B8B716 /* TrafficV.m in Sources */,
 				52E68B38207AFBC800B8B716 /* HudTips.m in Sources */,
 				528C20A1207AF3BC007276D6 /* AppDelegate.m in Sources */,
+				5294D9A6209175DE005FE5C8 /* UIButton+ST_FixMultiClick.m in Sources */,
 				52E68B3B207AFEF900B8B716 /* MissNetV.m in Sources */,
 				52E68B35207AFBBB00B8B716 /* StToast.m in Sources */,
 			);

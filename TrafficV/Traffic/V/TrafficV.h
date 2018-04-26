@@ -13,6 +13,7 @@
 //- (void)toDown;
 //- (void)toLeft;
 //- (void)toRight;
+- (void)toReset;
 - (void)toControl:(NSInteger)direction;    //0:上  1:右上  2:右  3:右下  4:下  5:左下  6:左  7:左上  8:中心  顺时针方向 
 @end
 @interface TrafficV : UIView
@@ -21,24 +22,33 @@
 
 @property (nonatomic ,strong)UIImageView *monitorIV;
 
-@property (nonatomic ,strong)UIView *dealV;
-
-@property (nonatomic ,strong)UIButton *upV;
-
-@property (nonatomic ,strong)UIButton *downV;
-
-@property (nonatomic ,strong)UIButton *leftV;
-
-@property (nonatomic ,strong)UIButton *rightV;
+//@property (nonatomic ,strong)UIView *dealV;
+//
+//@property (nonatomic ,strong)UIButton *upV;
+//
+//@property (nonatomic ,strong)UIButton *downV;
+//
+//@property (nonatomic ,strong)UIButton *leftV;
+//
+//@property (nonatomic ,strong)UIButton *rightV;
 
 @property (nonatomic ,strong)STJoyStickV* stJoyStickV;
 
-@property (nonatomic, strong)NSTimer *upTimer;
+//@property (nonatomic, strong)NSTimer *upTimer;
+//
+//@property (nonatomic, strong)NSTimer *downTimer;
+//
+//@property (nonatomic, strong)NSTimer *leftTimer;
+//
+//@property (nonatomic, strong)NSTimer *rightTimer;
 
-@property (nonatomic, strong)NSTimer *downTimer;
+@property (nonatomic ,strong)UILabel *LDis;
 
-@property (nonatomic, strong)NSTimer *leftTimer;
+@property (nonatomic ,strong)UILabel *LVals;
 
-@property (nonatomic, strong)NSTimer *rightTimer;
+@property (nonatomic ,strong)UILabel *RDis;
 
+@property (nonatomic ,strong)UILabel *RVals;
+
+@property (nonatomic ,strong)UIButton *resetBtn;
 @end
