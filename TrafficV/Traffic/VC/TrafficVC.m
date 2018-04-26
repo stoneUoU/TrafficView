@@ -87,6 +87,7 @@
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"text/html", @"text/javascript",@"image/jpeg", nil];
     //self.LogisticCode = "538681744406"  "887102266424600383"  self.ShipperCode = "ZTO"  "YTO"
+    //http://192.168.1.1:8080/?action=snapshot
     [manager GET:@"http://192.168.1.1:8080/?action=snapshot" parameters:@{} success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull res) {
         STLog(@"进了=======成功");
         [self.missNetV removeFromSuperview];
@@ -133,62 +134,81 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
-- (void)sendDs:(NSString *)str{
-    [sendTcpSocket writeData:[str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)] withTimeout:60 tag:100];
+//- (void)sendDs:(NSData *)sixHex{
+//    [sendTcpSocket writeData:sixHex withTimeout:60 tag:100];
+//    //[sendTcpSocket writeData:[str dataUsingEncoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)] withTimeout:60 tag:100];
+//}
+// LS 左轮速度  LD 左轮方向  RS 右轮速度  RD 右轮方向
+- (void)sendDs:(char)LS andLD:(char)LD andRS:(char)RS andRD:(char)RD{
+    //ff fe 05 01 05 00
+    unsigned char cmd_switch[6];
+    cmd_switch[0]=(char)0xFF;//帧头
+    cmd_switch[1]=(char)0xFE;//帧头
+    cmd_switch[2]=LS;//左轮速度: 05
+    cmd_switch[3]=LD;//方向: 正
+    cmd_switch[4]=RS;//右轮速度: 05
+    cmd_switch[5]=RD;//方向: 反
+    [sendTcpSocket writeData:[NSData dataWithBytes: cmd_switch  length:6] withTimeout:60 tag:100];
+}
+//LDis 左轮走过的里程   RDis 右轮走过的里程   // LS 左轮速度  RS 右轮速度
+-(NSDictionary *)caluMiles:(NSString *)LDis andRDis:(NSString *)RDis andLS:(char)LS andRS:(char)RS{
+    float scale = 6.326 / 5;
+    //STLog(@"%@",[NSString stringWithUTF8String:0xff ]);
+    //STLog(@"%@",[NSString stringWithFormat:@"%ld",strtoul([[[NSString stringWithCString:LS encoding:NSUTF8StringEncoding] substringWithRange:NSMakeRange(2,2)] UTF8String],0,16)]);
+    return @{@"LDis":@"123",@"RDis":@"123"};
 }
 
 #pragma mark - TrafficVDel
-- (void)toUp {
-    [self sendDs:@"发送前进指令"];
-}
-- (void)toDown {
-    [self sendDs:@"发送后退指令"];
-}
-
-- (void)toLeft {
-    [self sendDs:@"发送左转指令"];
-}
-
-- (void)toRight {
-    [self sendDs:@"发送右转指令"];
-}
+//- (void)toUp {
+//    [self sendDs:0x5 andLD:0x0 andRS:0x5 andRD:0x0];
+//}
+//- (void)toDown {
+//    [self sendDs:0x5 andLD:0x0 andRS:0x5 andRD:0x0];
+//}
+//- (void)toLeft {
+//    [self sendDs:0x5 andLD:0x0 andRS:0x5 andRD:0x0];
+//}
+//- (void)toRight {
+//    [self sendDs:0x5 andLD:0x0 andRS:0x5 andRD:0x0];
+//}
 
 -(void)toControl:(NSInteger)direction{
     switch (direction) {
-        case 0:{
-            [self sendDs:@"向上"];
+        case 0:{ //向上
+            [self sendDs:0x0F andLD:0x01 andRS:0x0F andRD:0x01];
+            //[self caluMiles:@"0" andRDis:@"0" andLS:0x0F andRS:0x0F];
             break;
         }
-        case 1:{
-            [self sendDs:@"向右上"];
+        case 1:{//向右上
+            [self sendDs:0x0F andLD:0x01 andRS:0x05 andRD:0x01];
             break;
         }
-        case 2:{
-            [self sendDs:@"向右"];
+        case 2:{//向右
+            [self sendDs:0x0F andLD:0x01 andRS:0x00 andRD:0x01];
             break;
         }
-        case 3:{
-            [self sendDs:@"向右下"];
+        case 3:{//向右下
+            [self sendDs:0x0F andLD:0x00 andRS:0x05 andRD:0x00];
             break;
         }
-        case 4:{
-            [self sendDs:@"向下"];
+        case 4:{//向下
+            [self sendDs:0x0F andLD:0x00 andRS:0x0F andRD:0x00];
             break;
         }
-        case 5:{
-            [self sendDs:@"向左下"];
+        case 5:{//向左下
+            [self sendDs:0x05 andLD:0x00 andRS:0x0F andRD:0x00];
             break;
         }
-        case 6:{
-            [self sendDs:@"向左"];
+        case 6:{//向左
+            [self sendDs:0x00 andLD:0x01 andRS:0x0F andRD:0x01];
             break;
         }
-        case 7:{
-            [self sendDs:@"向左上"];
+        case 7:{//向左上
+            [self sendDs:0x05 andLD:0x01 andRS:0x0F andRD:0x01];
             break;
         }
-        default:{
-            [self sendDs:@"回到中心"];
+        default:{//回到中心
+            [self sendDs:0x00 andLD:0x00 andRS:0x00 andRD:0x00];
             break;
         }
     }
@@ -210,8 +230,8 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
     // 1. 创建一个 udp socket用来和服务端进行通讯
     sendTcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dQueue socketQueue:nil];
     // 2. 连接服务器端. 只有连接成功后才能相互通讯 如果60s连接不上就出错
-    NSString *host = @"10.10.53.4";
-    uint16_t port = 60000;
+    NSString *host = @"192.168.1.1";//192.168.1.1
+    uint16_t port = 2001;
     [sendTcpSocket connectToHost:host onPort:port withTimeout:60 error:nil];
     // 连接必须服务器在线
 }
@@ -225,23 +245,41 @@ completionHandler:(nonnull void (^)(NSURLSessionResponseDisposition))completionH
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     //STLog(@"连接失败 %@", err);
     // 断线重连
-    NSString *host = @"10.10.53.4";
-    uint16_t port = 60000;
+    NSString *host = @"192.168.1.1";
+    uint16_t port = 2001;
     [sendTcpSocket connectToHost:host onPort:port withTimeout:60 error:nil];
 }
 #pragma mark - 消息发送成功 代理函数
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
-    STLog(@"消息发送成功");
+    //STLog(@"消息发送成功");
 }
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     //NSString *ip = [sock connectedHost];
     //uint16_t port = [sock connectedPort];
-    NSString *s = [[NSString alloc] initWithData:data encoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
+    //NSString *s = [[NSString alloc] initWithData:data encoding:CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)];
     //CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000)   ============  防止乱码
     //STLog(@"接收到服务器返回的数据 tcp [%@:%d] %@", ip, port, s);
-    [HudTips showToast: s showType:Pos animationType:StToastAnimationTypeScale];
+    [HudTips showToast: [@"TCP服务端返回的数据：" stringByAppendingString:[self hexStrFromData:data]] showType:Pos animationType:StToastAnimationTypeScale];
     // 每次读取完数据，都要调用下面的方式
     [sock readDataWithTimeout:-1 tag:0];
+}
+
+//data转换为十六进制的string
+- (NSString *)hexStrFromData:(NSData *)res{
+
+    Byte *bytes = (Byte *)[res bytes];
+    //下面是Byte 转换为16进制。
+    NSString *hexStr=@"";
+    for(int i=0;i<[res length];i++)
+    {
+        NSString *newHexStr = [NSString stringWithFormat:@"%x",bytes[i]&0xff];///16进制数
+        if([newHexStr length]==1)
+            hexStr = [NSString stringWithFormat:@"%@0%@",hexStr,newHexStr];
+        else
+            hexStr = [NSString stringWithFormat:@"%@%@",hexStr,newHexStr];
+    }
+    NSLog(@"hex = %@",hexStr);
+    return hexStr;
 }
 ///--------------------------------------
 #pragma mark - SLWebSocketDelegate

@@ -71,7 +71,7 @@
     dispatch_queue_t queue = dispatch_get_main_queue();
     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC));
-    uint64_t interval = (uint64_t)(1*NSEC_PER_SEC);   // 10毫秒一次
+    uint64_t interval = (uint64_t)(0.1*NSEC_PER_SEC);   // 10毫秒一次
     dispatch_source_set_timer(self.timer, start, interval, 0);
 
     __weak typeof(self)ws = self;
@@ -157,7 +157,6 @@
 - (void)stickMoveTo:(CGPoint)deltaToCenter
 {
     if ([NSString stringWithFormat:@"%f",deltaToCenter.x] == [NSString stringWithFormat:@"%f",60.000000] && [NSString stringWithFormat:@"%f",deltaToCenter.y] == [NSString stringWithFormat:@"%f",60.000000]){
-        STLog(@"=========");
         if (self.centerB ){
             self.centerB();
         }
